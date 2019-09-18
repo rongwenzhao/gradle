@@ -21,10 +21,7 @@ import org.gradle.api.Project
 import org.gradle.internal.classpath.ClassPath
 import org.gradle.internal.hash.HashCode
 import org.gradle.internal.hash.Hashing
-
-import org.gradle.kotlin.dsl.KotlinBuildScript
-import org.gradle.kotlin.dsl.KotlinInitScript
-import org.gradle.kotlin.dsl.KotlinSettingsScript
+import org.gradle.kotlin.dsl.*
 
 import org.gradle.kotlin.dsl.execution.ResidualProgram.Dynamic
 import org.gradle.kotlin.dsl.execution.ResidualProgram.Instruction
@@ -83,6 +80,7 @@ import kotlin.script.experimental.api.ScriptCompilationConfiguration
 import kotlin.script.experimental.api.baseClass
 import kotlin.script.experimental.api.defaultImports
 import kotlin.script.experimental.api.hostConfiguration
+import kotlin.script.experimental.api.implicitReceivers
 import kotlin.script.experimental.jvm.defaultJvmScriptingHostConfiguration
 
 
@@ -656,7 +654,7 @@ class ResidualProgramCompiler(
         get() = scriptDefinitionFromTemplate(
             when (programTarget) {
                 ProgramTarget.Project -> KotlinBuildScript::class
-                ProgramTarget.Settings -> KotlinSettingsScript::class
+                ProgramTarget.Settings -> CompiledKotlinSettingsScript::class
                 ProgramTarget.Gradle -> KotlinInitScript::class
             })
 
@@ -668,16 +666,20 @@ class ResidualProgramCompiler(
     val buildscriptWithPluginsScriptDefinition
         get() = scriptDefinitionFromTemplate(KotlinBuildscriptAndPluginsBlock::class)
 
-
     private
-    fun scriptDefinitionFromTemplate(template: KClass<out Any>) =
-        scriptDefinitionFromTemplate(template, implicitImports)
+    fun scriptDefinitionFromTemplate(template: KClass<out Any>, receiver: KClass<out Any>? = null) =
+        scriptDefinitionFromTemplate(
+            template,
+            implicitImports,
+            null // template.annotations.filterIsInstance<ImplicitReceiver>().map { it.type }.firstOrNull()
+        )
 }
 
 
 fun scriptDefinitionFromTemplate(
     template: KClass<out Any>,
-    implicitImports: List<String>
+    implicitImports: List<String>,
+    implicitReceiver: KClass<*>? = null
 ): ScriptDefinition {
     val hostConfiguration = defaultJvmScriptingHostConfiguration
     return ScriptDefinition.FromConfigurations(
@@ -686,6 +688,9 @@ fun scriptDefinitionFromTemplate(
             baseClass(template)
             defaultImports(implicitImports)
             hostConfiguration(hostConfiguration)
+            implicitReceiver?.let {
+                implicitReceivers(it)
+            }
         },
         evaluationConfiguration = null
     )

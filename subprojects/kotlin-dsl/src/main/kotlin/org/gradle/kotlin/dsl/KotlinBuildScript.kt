@@ -45,7 +45,8 @@ annotation class KotlinScriptTemplate
 @KotlinScriptTemplate
 @ScriptTemplateDefinition(
     resolver = KotlinBuildScriptDependenciesResolver::class,
-    scriptFilePattern = ".*\\.gradle\\.kts")
+    scriptFilePattern = ".*\\.gradle\\.kts"
+)
 @ScriptTemplateAdditionalCompilerArguments([
     "-jvm-target", "1.8",
     "-Xjsr305=strict",
@@ -83,6 +84,8 @@ abstract class KotlinBuildScript(
      */
     @Suppress("unused")
     fun plugins(@Suppress("unused_parameter") block: PluginDependenciesSpecScope.() -> Unit): Unit =
-        throw Exception("The plugins {} block must not be used here. "
-            + "If you need to apply a plugin imperatively, please use apply<PluginType>() or apply(plugin = \"id\") instead.")
+        throw Exception(
+            "The plugins {} block must not be used here. "
+                + "If you need to apply a plugin imperatively, please use apply<PluginType>() or apply(plugin = \"id\") instead."
+        )
 }

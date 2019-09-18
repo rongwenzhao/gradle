@@ -39,6 +39,7 @@ import org.gradle.api.resources.ResourceHandler
 import org.gradle.api.tasks.WorkResult
 import org.gradle.internal.service.ServiceRegistry
 import org.gradle.kotlin.dsl.resolver.KotlinBuildScriptDependenciesResolver
+import org.gradle.kotlin.dsl.support.ImplicitReceiver
 import org.gradle.kotlin.dsl.support.KotlinScriptHost
 import org.gradle.kotlin.dsl.support.delegates.SettingsDelegate
 import org.gradle.kotlin.dsl.support.get
@@ -88,6 +89,12 @@ abstract class KotlinSettingsScript(
     override fun apply(action: Action<in ObjectConfigurationAction>) =
         host.applyObjectConfigurationAction(action)
 }
+
+
+@ImplicitReceiver(Settings::class)
+abstract class CompiledKotlinSettingsScript(
+    private val host: KotlinScriptHost<Settings>
+)
 
 
 /**

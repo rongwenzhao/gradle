@@ -24,6 +24,11 @@ import org.gradle.kotlin.dsl.KotlinBuildScript
 import org.gradle.kotlin.dsl.KotlinInitScript
 import org.gradle.kotlin.dsl.KotlinSettingsScript
 import org.gradle.kotlin.dsl.ScriptHandlerScope
+import kotlin.reflect.KClass
+
+
+internal
+annotation class ImplicitReceiver(val type: KClass<*>)
 
 
 /**
@@ -45,6 +50,7 @@ abstract class KotlinBuildscriptBlock(host: KotlinScriptHost<Project>) : KotlinB
 /**
  * Base class for `buildscript` block evaluation on scripts targeting Settings.
  */
+@ImplicitReceiver(Settings::class)
 abstract class KotlinSettingsBuildscriptBlock(host: KotlinScriptHost<Settings>) : KotlinSettingsScript(host) {
 
     /**
@@ -61,6 +67,7 @@ abstract class KotlinSettingsBuildscriptBlock(host: KotlinScriptHost<Settings>) 
 /**
  * Base class for `initscript` block evaluation on scripts targeting Gradle.
  */
+@ImplicitReceiver(Gradle::class)
 abstract class KotlinInitscriptBlock(host: KotlinScriptHost<Gradle>) : KotlinInitScript(host) {
 
     /**

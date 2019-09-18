@@ -57,7 +57,6 @@ import kotlin.script.templates.ScriptTemplateDefinition
 /**
  * Base class for Kotlin init scripts.
  */
-@KotlinScriptTemplate
 @ScriptTemplateDefinition(
     resolver = KotlinBuildScriptDependenciesResolver::class,
     scriptFilePattern = ".+\\.init\\.gradle\\.kts")
@@ -75,7 +74,7 @@ abstract class KotlinInitScript(
     /**
      * The [ScriptHandler] for this script.
      */
-    val initscript
+    val initscript: ScriptHandler
         get() = host.scriptHandler
 
     /**
