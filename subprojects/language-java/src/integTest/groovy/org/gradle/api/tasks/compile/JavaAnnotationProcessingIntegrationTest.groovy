@@ -117,13 +117,13 @@ class JavaAnnotationProcessingIntegrationTest extends AbstractIntegrationSpec {
                 compileOnly project(":annotation")
                 annotationProcessor project(":processor")
             }
-            task sourcesJar(type: Jar) {
+            task generatedSourcesJar(type: Jar) {
                 from sourceSets.main.output.generatedSourcesDirs
             }
         """
 
         expect:
-        succeeds "sourcesJar"
+        succeeds "generatedSourcesJar"
         executed(":compileJava")
     }
 
