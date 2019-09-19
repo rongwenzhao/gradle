@@ -232,13 +232,17 @@ class ClosedProjectSubstitutionCrossVersionSpec extends ToolingApiSpecification 
                 apply plugin: 'eclipse'
             }
             project(":child1") {
-                task sourceJar(type: Jar) {
-                    archiveClassifier = "sources"
-                    from sourceSets.main.allJava
+                if (!tasks.names.contains('sourceJar')) {
+                    task sourceJar(type: Jar) {
+                        archiveClassifier = "sources"
+                        from sourceSets.main.allJava
+                    }
                 }
-                task javadocJar(type: Jar) {
-                    from tasks.javadoc
-                    archiveClassifier = "javadoc"
+                if (!tasks.names.contains('javadocJar')) {
+                    task javadocJar(type: Jar) {
+                        from tasks.javadoc
+                        archiveClassifier = "javadoc"
+                    }
                 }
             }            
             project(":child2") {
