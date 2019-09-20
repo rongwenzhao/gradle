@@ -20,6 +20,7 @@ We would like to thank the following community contributors to this release of G
 [Ross Goldberg](https://github.com/rgoldberg),
 [jutoft](https://github.com/jutoft),
 [Robin Verduijn](https://github.com/robinverduijn),
+[Pedro Tôrres](https://github.com/t0rr3sp3dr0),
 and [Robert Stupp](https://github.com/snazy).
 
 <!-- 
@@ -111,6 +112,11 @@ To ensure Windows batch scripts retain the appropriate line endings, `gradle ini
 
 This was contributed by [Tom Eyckmans](https://github.com/teyckmans).
 
+## Improved Java/Groovy compilation avoidance
+
+The class analysis used as part of the incremental compilation will now exclude any classes that are an implementation details.
+It will help Gradle narrow the number of classes to recompile implementation detail changes.
+
 ## Features for plugin authors
 
 ### ConfigurableFileTree managed property methods
@@ -143,6 +149,35 @@ See the user manual for how to [inject services]((userguide/custom_gradle_types.
 In the same vein, doing file system operations such as `copy()`, `sync()` and `delete()` or running external processes via `exec()` and `javaexec()` was only possible by using the APIs provided by a `Project`. Two new injectable services now allow to do all that when a `Project` is not available.
 
 See the [user manual](userguide/custom_gradle_types.html#service_injection) for how to inject services and the [`FileSystemOperations`](javadoc/org/gradle/api/file/FileSystemOperations.html) and [`ExecOperations`](javadoc/org/gradle/process/ExecOperations.html) api documentation for more details and examples.
+
+### Services available to Worker API actions
+
+The following services are now available for injection in `WorkAction` classes:
+- [ObjectFactory](javadoc/org/gradle/api/model/ObjectFactory.html)
+- [FileSystemOperations](javadoc/org/gradle/api/file/FileSystemOperations.html)
+- [ExecOperations](javadoc/org/gradle/process/Execoperations.html)
+
+These services can be injected by adding them to the constructor arguments of the `WorkAction` implementation:
+
+```
+abstract class ReverseFile implements WorkAction<ReverseParameters> {
+    private final FileSystemOperations fileSystemOperations
+
+    @Inject
+    public ReverseFile(FileSystemOperations fileSystemOperations) {
+        this.fileSystemOperations = fileSystemOperations
+    }
+
+    @Override
+    public void execute() {
+        fileSystemOperations.copy {
+            from parameters.fileToReverse
+            into parameters.destinationDir
+            filter { String line -> line.reverse() }
+        }
+    }
+}
+```
 
 ## Security
 
@@ -180,6 +215,11 @@ Promoted features are features that were incubating in previous versions of Grad
 See the User Manual section on the “[Feature Lifecycle](userguide/feature_lifecycle.html)” for more information.
 
 The following are the features that have been promoted in this Gradle release.
+
+### C++ and Swift support
+
+We promoted all the new native plugins (i.e. `cpp-application`, `cpp-library`, `cpp-unit-test`, `swift-application`, `swift-library`, `xctest`, `visual-studio` and `xcode`).
+Note that all [software model plugins are still incubating and will be phased out](https://blog.gradle.org/state-and-future-of-the-gradle-software-model) instead of being promoted.
 
 ### New incremental tasks API
 
