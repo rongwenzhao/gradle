@@ -28,9 +28,11 @@ class ZincScalaCompilerMultiVersionIntegrationTest extends MultiVersionIntegrati
 
             ${mavenCentralRepository()}
 
+            scala {
+                zincVersion = "${version}"
+            }
             dependencies {
                 implementation "org.scala-lang:scala-library:2.10.7"
-                zinc "org.scala-sbt:zinc_2.12:${version}"
             }
         """
         args("--info")
