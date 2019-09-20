@@ -61,6 +61,8 @@ class InstantExecutionSantaTrackerIntegrationTest extends AbstractInstantExecuti
     }
 
     def "supported tasks clean assembleDebug on Santa Tracker Java"() {
+        // Coming from Android plugin
+        executer.expectDeprecationWarning()
 
         given:
         copyRemoteProject("santaTrackerJava")

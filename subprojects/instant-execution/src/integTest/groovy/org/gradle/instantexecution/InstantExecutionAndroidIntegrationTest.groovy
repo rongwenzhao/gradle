@@ -70,6 +70,9 @@ class InstantExecutionAndroidIntegrationTest extends AbstractInstantExecutionAnd
     }
 
     def "android 3.6 minimal build clean assembleDebug"() {
+        // Coming from Android plugin
+        executer.expectDeprecationWarning()
+
         when:
         instantRun("assembleDebug")
 

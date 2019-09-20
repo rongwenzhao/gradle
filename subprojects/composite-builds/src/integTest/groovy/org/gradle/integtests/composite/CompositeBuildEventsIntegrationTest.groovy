@@ -53,6 +53,7 @@ class CompositeBuildEventsIntegrationTest extends AbstractCompositeBuildIntegrat
                 }
             }
 """
+        executer.expectDeprecationWarning() // Due to LoggingBuildListener
 
         buildA.buildFile << """
             task resolveArtifacts(type: Copy) {

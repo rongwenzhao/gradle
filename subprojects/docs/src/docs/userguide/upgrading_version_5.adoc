@@ -59,6 +59,11 @@ Its predecessor `IncrementalTaskInputs` has been deprecated.
 Forcing dependency versions using `force = true` on a first-level dependency is deprecated.
 Force has both a semantic and ordering issue which can be avoided by using a <<rich_versions.adoc#rich-version-constraints, strict version constraint>>.
 
+==== `BuildListener#buildStarted` and `Gradle#buildStarted` has been deprecated
+
+Those legacy APIs are no-op in any of the build scripts.
+We are deprecating their usage to avoid user confusion.
+
 === Potential breaking changes
 
 ==== Android Gradle Plugin 3.3 and earlier is not supported anymore
