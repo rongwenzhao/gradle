@@ -16,8 +16,6 @@
 
 package org.gradle.integtests.fixtures
 
-import org.gradle.api.JavaVersion
-
 import static org.gradle.language.scala.internal.toolchain.DefaultScalaToolProvider.DEFAULT_ZINC_VERSION
 
 

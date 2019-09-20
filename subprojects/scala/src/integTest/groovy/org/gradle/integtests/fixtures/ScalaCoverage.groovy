@@ -16,8 +16,6 @@
 
 package org.gradle.integtests.fixtures
 
-import org.gradle.integtests.fixtures.executer.GradleContextualExecuter
-
 class ScalaCoverage {
     static final String NEWEST = "2.13.0"
 
