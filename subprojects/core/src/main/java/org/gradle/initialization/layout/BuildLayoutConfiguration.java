@@ -18,7 +18,6 @@ package org.gradle.initialization.layout;
 import org.gradle.StartParameter;
 import org.gradle.TaskExecutionRequest;
 import org.gradle.internal.scan.UsedByScanPlugin;
-import org.gradle.util.DeprecationLogger;
 
 import java.io.File;
 
@@ -34,9 +33,9 @@ public class BuildLayoutConfiguration {
 
     public BuildLayoutConfiguration(StartParameter startParameter) {
         currentDir = startParameter.getCurrentDir();
-        searchUpwards = DeprecationLogger.whileDisabled(() -> startParameter.isSearchUpwards()) && !isInitTaskRequested(startParameter);
+        searchUpwards = startParameter.isSearchUpwards() && !isInitTaskRequested(startParameter);
         settingsFile = startParameter.getSettingsFile();
-        useEmptySettings = DeprecationLogger.whileDisabled(() -> startParameter.isUseEmptySettings());
+        useEmptySettings = startParameter.isUseEmptySettings();
     }
 
     private boolean isInitTaskRequested(StartParameter startParameter) {

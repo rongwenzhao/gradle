@@ -35,7 +35,6 @@ import org.gradle.internal.DefaultTaskExecutionRequest;
 import org.gradle.internal.FileUtils;
 import org.gradle.internal.concurrent.DefaultParallelismConfiguration;
 import org.gradle.internal.logging.DefaultLoggingConfiguration;
-import org.gradle.util.DeprecationLogger;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -296,7 +295,6 @@ public class StartParameter implements LoggingConfiguration, ParallelismConfigur
      * @return this
      */
     public StartParameter useEmptySettings() {
-        DeprecationLogger.nagUserOfDeprecated("StartParameter#useEmptySettings()");
         searchUpwards = false;
         useEmptySettings = true;
         settingsFile = null;
@@ -309,7 +307,6 @@ public class StartParameter implements LoggingConfiguration, ParallelismConfigur
      * @return Whether to use empty settings or not.
      */
     public boolean isUseEmptySettings() {
-        DeprecationLogger.nagUserOfDeprecated("StartParameter#isUseEmptySettings()");
         return useEmptySettings;
     }
 
@@ -400,12 +397,10 @@ public class StartParameter implements LoggingConfiguration, ParallelismConfigur
     }
 
     public boolean isSearchUpwards() {
-        DeprecationLogger.nagUserOfDeprecated("StartParameter#isSearchUpwards()");
         return searchUpwards;
     }
 
     public void setSearchUpwards(boolean searchUpwards) {
-        DeprecationLogger.nagUserOfDeprecated("StartParameter#setSearchUpwards(boolean)");
         this.searchUpwards = searchUpwards;
     }
 
