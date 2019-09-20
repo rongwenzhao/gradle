@@ -248,11 +248,11 @@ dependencies {
 """
 package compile.test
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 class Person(val name: String, val age: Int) {
     def hello() {
-        val x: java.util.List[Int] = List(3, 1, 2)
+        val x: java.util.List[Int] = List(3, 1, 2).asJava
         java.util.Collections.reverse(x)
     }
 }
@@ -314,10 +314,6 @@ class Person(val name: String, val age: Int) {
         return new ClassFile(scalaClassFile(path))
     }
 
-    // Zinc incremental analysis doesn't work for Java 9+:
-    // Pruning sources from previous analysis, due to incompatible CompileSetup.
-    // Tried -source/-target 1.8 but still no luck
-    @Requires(TestPrecondition.JDK8_OR_EARLIER)
     def compilesScalaCodeIncrementally() {
         setup:
         def person = scalaClassFile("Person.class")
@@ -337,7 +333,6 @@ class Person(val name: String, val age: Int) {
         other.lastModified() == old(other.lastModified())
     }
 
-    @Requires(TestPrecondition.JDK8_OR_EARLIER)
     def compilesJavaCodeIncrementally() {
         setup:
         def person = scalaClassFile("Person.class")
@@ -357,7 +352,6 @@ class Person(val name: String, val age: Int) {
         other.lastModified() == old(other.lastModified())
     }
 
-    @Requires(TestPrecondition.JDK8_OR_EARLIER)
     def compilesIncrementallyAcrossProjectBoundaries() {
         setup:
         def person = file("prj1/build/classes/scala/main/Person.class")

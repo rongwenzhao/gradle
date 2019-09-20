@@ -56,11 +56,11 @@ class ZincScalaCompilerMultiVersionIntegrationTest extends MultiVersionIntegrati
             """
 package compile.test
 
-import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 class Person(val name: String, val age: Int) {
     def hello() {
-        val x: java.util.List[Int] = List(3, 1, 2)
+        val x: java.util.List[Int] = List(3, 1, 2).asJava
         java.util.Collections.reverse(x)
     }
 }
