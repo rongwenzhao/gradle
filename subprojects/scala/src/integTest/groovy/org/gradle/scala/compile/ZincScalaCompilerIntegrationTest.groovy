@@ -227,10 +227,6 @@ compileScala.scalaCompileOptions.debugLevel = "none"
         !noDebug.debugIncludesLocalVariables
     }
 
-    def failsWithGoodErrorMessageWhenScalaToolsNotConfigured() {
-
-    }
-
     def buildScript() {
 """
 apply plugin: "scala"
