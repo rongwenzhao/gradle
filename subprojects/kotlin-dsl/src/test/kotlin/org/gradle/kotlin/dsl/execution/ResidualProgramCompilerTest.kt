@@ -50,15 +50,12 @@ import org.gradle.kotlin.dsl.fixtures.testRuntimeClassPath
 import org.gradle.kotlin.dsl.fixtures.withClassLoaderFor
 
 import org.gradle.kotlin.dsl.support.KotlinScriptHost
-import org.gradle.kotlin.dsl.support.compileKotlinScriptToDirectory
-import org.gradle.kotlin.dsl.support.messageCollectorFor
 
 import org.gradle.plugin.management.internal.DefaultPluginRequests
 import org.gradle.plugin.management.internal.PluginRequests
 
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.jetbrains.kotlin.scripting.definitions.ScriptDefinition
 
 import org.junit.Test
 
@@ -557,65 +554,6 @@ class ResidualProgramCompilerTest : TestWithTempFiles() {
                 action(executableProgram as ExecutableProgram)
             }
         }
-    }
-
-    @Test
-    fun canInjectImplicitReceiver() {
-        outputDir().let { outputDir ->
-
-            compileKotlinScriptTo(
-                outputDir,
-                "bar()",
-                scriptDefinitionFromTemplate(
-                    template = FooTemplate::class,
-                    implicitImports = emptyList(),
-                    implicitReceiver = FooReceiver::class
-                )
-            )
-
-            withClassLoaderFor(outputDir) {
-
-                val host = mock<FooHost>()
-                val receiver = FooReceiver()
-
-                loadClass("Script")
-                    .getDeclaredConstructor(FooHost::class.java, FooReceiver::class.java)
-                    .newInstance(host, receiver)
-
-                assertThat(
-                    receiver.bars,
-                    equalTo(1)
-                )
-            }
-        }
-    }
-
-    open class FooTemplate(host: FooHost)
-
-    interface FooHost
-
-    class FooReceiver {
-        var bars = 0
-        fun bar() {
-            bars += 1
-        }
-    }
-
-    private
-    fun compileKotlinScriptTo(
-        outputDir: File,
-        script: String,
-        scriptDefinition: ScriptDefinition
-    ) {
-        compileKotlinScriptToDirectory(
-            outputDir,
-            file("script.kts").apply {
-                writeText(script)
-            },
-            scriptDefinition,
-            testRuntimeClassPath.asFiles,
-            messageCollectorFor(mock())
-        )
     }
 
     private
