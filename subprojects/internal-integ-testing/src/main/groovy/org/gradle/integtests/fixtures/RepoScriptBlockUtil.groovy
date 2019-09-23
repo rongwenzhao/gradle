@@ -19,6 +19,7 @@ package org.gradle.integtests.fixtures
 import groovy.transform.CompileStatic
 import org.gradle.api.artifacts.dsl.RepositoryHandler
 import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+import org.gradle.internal.os.OperatingSystem
 import org.gradle.test.fixtures.dsl.GradleDsl
 
 import static org.gradle.api.artifacts.ArtifactRepositoryContainer.GOOGLE_URL
@@ -73,9 +74,14 @@ class RepoScriptBlockUtil {
 
         private MirroredRepository(String originalUrl, String mirrorUrl, String type) {
             this.originalUrl = originalUrl
-            this.mirrorUrl = mirrorUrl ?: originalUrl
             this.name = mirrorUrl ? name() + "_MIRROR" : name()
             this.type = type
+            if (OperatingSystem.current().isMacOsX()) {
+                // https://github.com/gradle/gradle-private/issues/2725
+                this.mirrorUrl = originalUrl
+            } else {
+                this.mirrorUrl = mirrorUrl ?: originalUrl
+            }
         }
 
         String getRepositoryDefinition(GradleDsl dsl = GROOVY) {
